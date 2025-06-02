@@ -1,0 +1,41 @@
+# Build files
+*.o
+*.so
+*.a
+*.exe
+*.dll
+
+# Temporary files
+*.tmp
+*.swp
+*.bak
+*.log
+
+# Editor/IDE specific files
+.vscode/
+.idea/
+*.sublime-workspace
+
+# Dependency files
+node_modules/
+vendor/
+
+# Configuration files
+.env
+config.json
+
+# Metadata files
+.DS_Store
+Thumbs.db
+
+# Compiled files
+*.class
+*.pyc
+*.pyo
+
+# Other ignored files
+coverage/
+dist/
+build/
+*.tar.gz
+*.zip
