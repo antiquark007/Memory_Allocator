@@ -1,8 +1,20 @@
-CC=gcc
-CFLAGS = -Wall -g -I../package
+# Compiler and linker flags
+CFLAGS = -O2 -Wall -std=c2x
+LDFLAGS = -lbu
 
-alloc: alloc.c alloc.h
-	$(CC) $(CFLAGS) -o alloc alloc.c
+# Targets
+.PHONY: all clean
+
+all: alloc
+
+alloc: alloc.o heap.o
+	cc $(CFLAGS) $^ -o $@ $(LDFLAGS)
+
+alloc.o: alloc.c alloc.h
+	cc $(CFLAGS) -c $<
+
+heap.o: heap.asm
+	nasm -f elf $< -o $@
 
 clean:
-	rm -f alloc
+	rm -f *.o alloc
