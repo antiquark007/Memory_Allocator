@@ -1,11 +1,11 @@
 # Compiler and linker flags
-CFLAGS = -O2 -Wall -std=c2x
+CFLAGS = -O2 -Wall -std=c23
 LDFLAGS = -lbu
 
 # Targets
-.PHONY: all clean
+.PHONY:clean
 
-all: alloc
+all: clean alloc
 
 alloc: alloc.o heap.o
 	cc $(CFLAGS) $^ -o $@ $(LDFLAGS)

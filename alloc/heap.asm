@@ -7,3 +7,5 @@ Section .heap alloc noexec write nobits
 memspace:
     heapsize equ Heapsize
     resd heapsize
+
+Section .note.GNU-stack noalloc
