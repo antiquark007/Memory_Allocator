@@ -38,5 +38,5 @@ typedef struct packed s_header header;
 #define $v (void *)
 #define $h (header *)
 
-
+void *alloc(int32);
 int main(int, char**);
