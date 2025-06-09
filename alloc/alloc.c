@@ -17,11 +17,7 @@ void *alloc(int32 bytes)
     (!(hdr->w)) ? ({
         printf("empty\n");
         exit(0);
-    })
-                : ({
-                      printf("bla\n");
-                      exit(0);
-                  });
+    }): ({printf("bla\n");exit(0);});
 
     return $v 0;
 }
