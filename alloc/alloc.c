@@ -17,16 +17,16 @@ void *alloc(int32 bytes)
 
     hdr->w=1;
     (!(hdr->w)) ? ({
-        printf("empty\n");
-        exit(0);
+        if(words>Maxwords)
+        return ErrNoMem;
     })
-                : ({printf("bla\n");exit(0); });
+                : ({(void)0;});
 
     return $v 0;
 }
 int main(int argc, char *argv[])
 {
-    $l *memspace=1;
+    //$l *memspace=1;
     alloc(7);
     return 0;
 }
