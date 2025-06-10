@@ -14,6 +14,8 @@ void *alloc(int32 bytes)
 
     mem = $v memspace;
     hdr = $h mem;
+
+    hdr->w=1;
     (!(hdr->w)) ? ({
         printf("empty\n");
         exit(0);
@@ -24,7 +26,7 @@ void *alloc(int32 bytes)
 }
 int main(int argc, char *argv[])
 {
-    //$l memspace=l;
+    $l *memspace=1;
     alloc(7);
     return 0;
 }
