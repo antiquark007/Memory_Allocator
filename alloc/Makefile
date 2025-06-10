@@ -1,5 +1,5 @@
 # Compiler and linker flags
-CFLAGS = -O2 -Wall -std=c23
+CFLAGS = -O2 -Wall -std=c2x
 LDFLAGS = -lbu
 
 # Targets
