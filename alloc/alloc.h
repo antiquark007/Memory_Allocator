@@ -38,5 +38,8 @@ typedef struct packed s_header header;
 #define $v (void *)
 #define $h (header *)
 
+#define Maxwords 1024 // Define a maximum word limit for allocation
+#define ErrNoMem NULL 
+
 void *alloc(int32);
 int main(int, char**);
