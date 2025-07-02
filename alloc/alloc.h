@@ -38,5 +38,7 @@ typedef struct packed s_header header;
 #define $v (void *)
 #define $h (header *)
 
+
+void *mkalloc(word,header*);//this will take the number of words and header
 void *alloc(int32);
 int main(int, char**);
