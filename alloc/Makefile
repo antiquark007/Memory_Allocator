@@ -1,20 +1,49 @@
-# Compiler and linker flags
-CFLAGS = -O2 -Wall -std=c2x
-LDFLAGS = -lbu
+# Memory Allocator Makefile
 
-# Targets
-.PHONY:clean
+# Compiler and assembler
+CC = gcc
+ASM = nasm
 
-all: clean alloc
+# Compiler flags
+CFLAGS = -O2 -Wall -Wextra -std=c11 -g -m32
+ASMFLAGS = -f elf32
+LDFLAGS = -m32
 
-alloc: alloc.o heap.o
-	cc $(CFLAGS) $^ -o $@ $(LDFLAGS)
+# Target executable
+TARGET = alloc
 
+# Object files
+OBJS = alloc.o heap.o
+
+# Default target
+.PHONY: all clean test
+
+all: $(TARGET)
+
+# Link object files to create executable
+$(TARGET): $(OBJS)
+	$(CC) $(LDFLAGS) $^ -o $@
+
+# Compile C source file
 alloc.o: alloc.c alloc.h
-	cc $(CFLAGS) -c $<
+	$(CC) $(CFLAGS) -c $< -o $@
 
+# Assemble assembly source file
 heap.o: heap.asm
-	nasm -f elf $< -o $@
+	$(ASM) $(ASMFLAGS) $< -o $@
 
+# Test target to run the allocator
+test: $(TARGET)
+	./$(TARGET)
+
+# Clean build artifacts
 clean:
-	rm -f *.o alloc
+	rm -f *.o $(TARGET)
+
+# Show help
+help:
+	@echo "Available targets:"
+	@echo "  all    - Build the allocator (default)"
+	@echo "  test   - Build and run the allocator"
+	@echo "  clean  - Remove build artifacts"
+	@echo "  help   - Show this help message"
