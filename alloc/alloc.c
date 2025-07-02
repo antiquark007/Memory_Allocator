@@ -1,66 +1,110 @@
-// alloc.c
+// alloc.c - Simple memory allocator implementation
 #include "alloc.h"
 
-extern heap *memspace; // define it 1gb memoey
+// External heap memory space defined in assembly
+extern heap *memspace;
+
+// Maximum words available in the heap (1GB / 4 bytes per word)
+#define Maxwords (1024*1024*1024/4)
+
+// Error handling macro - returns NULL on memory allocation failure
+#define reterr(err) return NULL
+
+/**
+ * mkalloc - Core allocation function that marks memory as allocated
+ * @words: Number of 4-byte words to allocate
+ * @hdr: Pointer to the header structure
+ * 
+ * Returns: Pointer to allocated memory or NULL on failure
+ */
 void *mkalloc(word words, header *hdr)
 {
     void *ret, *bytesin;
     word wordsin;
 
-    bytesin = ($v (($v hdr) - memspace));
-    wordsin = (((word)bytesin) / 4) + !;
-    if (words > (maxwords - wordsin))
+    // Calculate offset from start of heap in bytes
+    bytesin = (void *)((char *)hdr - (char *)memspace);
+    
+    // Convert bytes to words and add 1 for header
+    wordsin = (((word)(uintptr_t)bytesin) / 4) + 1;
+    
+    // Check if requested allocation exceeds available space
+    if (words > (Maxwords - wordsin))
     {
         reterr(ErrNoMem);
     }
 
-    hdr->w = words;
-    hdr->alloced = true;
-    ret = ($v hdr) + 4;
+    // Set header fields
+    hdr->w = words;           // Store number of words allocated
+    hdr->alloced = true;      // Mark as allocated
+    
+    // Return pointer to usable memory (after header)
+    ret = (void *)((char *)hdr + 4);
 
     return ret;
 }
 
-// 2*4=8 for 7=>7/4=1+1=8/4
+/**
+ * alloc - Main allocation function (similar to malloc)
+ * @bytes: Number of bytes to allocate
+ * 
+ * Returns: Pointer to allocated memory or NULL on failure
+ */
 void *alloc(int32 bytes)
 {
     word words;
     header *hdr;
     void *mem;
 
+    // Convert bytes to words (round up if not divisible by 4)
     words = (!(bytes % 4)) ? bytes / 4 : (bytes / 4) + 1;
 
-    mem = $v memspace;
-    hdr = $h mem;
+    // Get pointer to heap memory space
+    mem = (void *)memspace;
+    hdr = (header *)mem;
 
-    (!(hdr->w)) ? ({
+    // Check if this is the first allocation (header not initialized)
+    if (!(hdr->w)) 
+    {
+        // Debug prints for testing
         // printf("words=%d\nmaxwords=%d\n",words,Maxwords);
         // printf("words>maxwords=%d\n",(words>Maxwords));
+        
+        // Check if allocation size exceeds heap capacity
         if (words > Maxwords)
         {
             reterr(ErrNoMem);
         }
-        // printf("2\n");
+        
         fflush(stdout);
 
+        // Perform the actual allocation
         mem = mkalloc(words, hdr);
         if (!mem)
         {
-            return $v 0;
+            return NULL;  // Return NULL on allocation failure
         }
-        return 0;
-    })
-                : ({ (void)0; });
+        return mem;  // Return allocated memory pointer
+    }
 
-    return $v 0;
+    // TODO: Implement logic for subsequent allocations
+    // This would involve finding free blocks in the heap
+    return NULL;
 }
+
+/**
+ * main - Test function for the allocator
+ */
 int main(int argc, char *argv[])
 {
     int8 *p;
-    //$l *memspace=1;
-    p=alloc(7);
-    printf("0x%x\n",$i p);
+    
+    // Test allocation of 7 bytes
+    p = (int8 *)alloc(7);
+    printf("Allocated memory at: 0x%p\n", (void *)p);
 
     return 0;
 }
-//we have to make free and alloc funtion and menm to allioc the function in the mem
+
+// TODO: Implement free() function to deallocate memory
+// TODO: Implement heap management for multiple allocations
